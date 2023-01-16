@@ -1,0 +1,7 @@
+project: pyexcel
+target: file-parse
+testsuite:
+    - file://mayhem/testsuite
+cmds:
+  - cmd: /src/mayhem/fuzz_file.py
+    libfuzzer: true
