@@ -1,0 +1,18 @@
+# Mayhem target: pyexcel spreadsheet parser (Atheris/libFuzzer harness).
+# The cmd binary is the compiled ELF launcher that drives mayhem/fuzz_file.py; Atheris
+# instruments the pyexcel library so the run records coverage (edges).
+project: pyexcel
+target: file-parse
+
+cmds:
+  - cmd: /mayhem/pyexcel_fuzzer
+    libfuzzer: true
+    # Atheris re-instruments pyexcel's large import tree on every process start, so even
+    # -help=1 takes several seconds on Mayhem's sandbox — above the default smoke-test
+    # timeout ("target timed out when printing options").
+    timeout: 30
+
+# Seed corpus of representative spreadsheet files (file:// URIs, per the Mayhemfile schema).
+testsuite:
+  - https://$MAYHEM_DOMAIN/$MAYHEM_PROJECT/$MAYHEM_TARGET/testsuite.tar
+  - file://mayhem/file-parse/testsuite
